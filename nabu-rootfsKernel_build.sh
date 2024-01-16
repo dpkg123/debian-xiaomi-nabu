@@ -1,5 +1,6 @@
 #!/bin/sh
 
+set -x
 if [ "$(id -u)" -ne 0 ]
 then
   echo "rootfs can only be built as root"
@@ -30,14 +31,13 @@ dpkg-deb --build --root-owner-group alsa-xiaomi-nabu
 
 
 
-truncate -s 6G rootfs.img
+truncate -s 10G rootfs.img
 mkfs.ext4 rootfs.img
 mkdir rootdir
 mount -o loop rootfs.img rootdir
 
-wget https://cdimage.ubuntu.com/ubuntu-base/releases/$VERSION/release/ubuntu-base-$VERSION-base-arm64.tar.gz
-tar xzvf ubuntu-base-$VERSION-base-arm64.tar.gz -C rootdir
-#rm ubuntu-base-$VERSION-base-arm64.tar.gz
+apt-get install debootstrap -y
+debootstrap --arch=arm64 --include=w3m,htop,neofetch,nethack-console,rmtfs,protection-domain-mapper,tqftpserv,bash-completion,fish,sudo,ssh bullseye rootfs
 
 mount --bind /dev rootdir/dev
 mount --bind /dev/pts rootdir/dev/pts
@@ -70,14 +70,10 @@ chroot rootdir apt update
 chroot rootdir apt upgrade -y
 
 #u-boot-tools breaks grub installation
-chroot rootdir apt install -y bash-completion sudo ssh nano u-boot-tools- ubuntu-desktop
+chroot rootdir apt install -y u-boot-tools- 
 
 #chroot rootdir gsettings set org.gnome.shell.extensions.dash-to-dock show-mounts-only-mounted true
 
-
-
-#Device specific
-chroot rootdir apt install -y rmtfs protection-domain-mapper tqftpserv
 
 #Remove check for "*-laptop"
 sed -i '/ConditionKernelVersion/d' rootdir/lib/systemd/system/pd-mapper.service
