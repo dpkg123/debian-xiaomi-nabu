@@ -37,7 +37,7 @@ mkdir rootdir
 mount -o loop rootfs.img rootdir
 
 apt-get install debootstrap -y
-debootstrap --arch=arm64 --include=w3m,htop,neofetch,nethack-console,rmtfs,protection-domain-mapper,tqftpserv,bash-completion,fish,sudo,ssh bookworm rootdir
+debootstrap --arch=arm64 --include=w3m,ca-certificates,htop,neofetch,nethack-console,rmtfs,protection-domain-mapper,tqftpserv,bash-completion,fish,sudo,ssh --variant=minbase bookworm rootdir
 
 mount --bind /dev rootdir/dev
 mount --bind /dev/pts rootdir/dev/pts
