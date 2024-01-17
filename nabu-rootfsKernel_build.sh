@@ -37,7 +37,7 @@ mkdir rootdir
 mount -o loop rootfs.img rootdir
 
 apt-get install debootstrap -y
-debootstrap --arch=arm64 --include=w3m,htop,neofetch,nethack-console,rmtfs,protection-domain-mapper,tqftpserv,bash-completion,fish,sudo,ssh bullseye rootfs
+debootstrap --arch=arm64 --include=w3m,htop,neofetch,nethack-console,rmtfs,protection-domain-mapper,tqftpserv,bash-completion,fish,sudo,ssh bookworm rootdir
 
 mount --bind /dev rootdir/dev
 mount --bind /dev/pts rootdir/dev/pts
@@ -70,7 +70,7 @@ chroot rootdir apt update
 chroot rootdir apt upgrade -y
 
 #u-boot-tools breaks grub installation
-chroot rootdir apt install -y u-boot-tools- 
+chroot rootdir apt install -y u-boot-tools- kde-standard 
 
 #chroot rootdir gsettings set org.gnome.shell.extensions.dash-to-dock show-mounts-only-mounted true
 
